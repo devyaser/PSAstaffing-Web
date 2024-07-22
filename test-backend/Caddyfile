@@ -1,0 +1,24 @@
+test1.psastaffing.com {
+    # good practice to signal on behalf of who 
+    # are the certs getting issue
+	tls info@psastaffing.com
+
+    # logs are optional
+	log {
+		output file /var/log/caddy/test.psastaffing.com
+		format console
+	}
+
+	root * /srv/www/wordpress
+	encode gzip
+	file_server
+	php_fastcgi unix//run/php/php-fpm.sock
+
+	@disallowed {
+		path /xmlrpc.php
+		path *.sql
+		path /wp-content/uploads/*.php
+	}
+
+	rewrite @disallowed '/index.php'
+}
